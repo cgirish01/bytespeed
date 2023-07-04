@@ -28,14 +28,17 @@ def identify(request):
 
     # Check if new info provided
     if primary_contact.phoneNumber != phoneNumber or primary_contact.email != email:
+        if not phoneNumber or not email:
+            pass
+        else:
         # Create secondary contact if new info provided
-        secondary_contact = Contact.objects.create(
-            email=email,
-            phoneNumber=phoneNumber,
-            linkPrecedence="secondary",
-            linkedId=primary_contact.id
-        )
-        related_contacts = list(related_contacts) + [secondary_contact]
+            secondary_contact = Contact.objects.create(
+                email=email,
+                phoneNumber=phoneNumber,
+                linkPrecedence="secondary",
+                linkedId=primary_contact.id
+            )
+            related_contacts = list(related_contacts) + [secondary_contact]
 
     emails = set([c.email for c in [primary_contact] + list(related_contacts) if c.email])
     phoneNumbers = set([c.phoneNumber for c in [primary_contact] + list(related_contacts) if c.phoneNumber])
